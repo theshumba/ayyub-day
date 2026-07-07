@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f3d2e" />
+  <title>Ayyub · Today (for you)</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body>
+  <div id="login" class="view">
+    <div class="login-card">
+      <div class="brand">☾ Ayyub’s Day</div>
+      <p class="brand-sub">A little window into his day.</p>
+      <input id="login-email" class="field" type="email" placeholder="Email" autocomplete="username" />
+      <input id="login-pw" class="field" type="password" placeholder="Password" autocomplete="current-password" />
+      <p id="login-err" class="login-err"></p>
+      <button id="btn-signin" class="btn">Sign in</button>
+      <button id="btn-signup" class="btn ghost">Create account</button>
+    </div>
+  </div>
+
+  <div id="app" class="view hidden">
+    <header class="topbar"><span class="topbar-title">☾ His day, for you</span></header>
+    <div id="demo-banner" class="demo-banner hidden">Demo — showing the schedule saved on this device.</div>
+    <main id="wife-root" class="tab-root"></main>
+  </div>
+
+  <script type="module" src="./js/wife.js"></script>
+</body>
+</html>
