@@ -27,7 +27,7 @@ const emptyWeek = (key) => ({
 export const state = {
   role: 'owner', user: null, hid: null, household: null,
   priv: defaultPriv(), shared: null, prayers: null, date: new Date(),
-  demo: !FIREBASE_READY, ready: false, error: '',
+  demo: !FIREBASE_READY || !!globalThis.__SMOKE__, ready: false, error: '',
 };
 
 let fb = null;

@@ -22,14 +22,15 @@ export const CONFIG = {
   jumuahTime: '13:00',   // adjust to Ayyub's masjid
 };
 
-// Paste the Firebase web-app config here after creating the project (see README).
+// Firebase web-app config for project "ayyubs-day". Safe to keep public —
+// access is controlled by firestore.rules + login, not by hiding these keys.
 export const FIREBASE_CONFIG = {
-  apiKey: 'PASTE_API_KEY',
-  authDomain: 'PASTE_PROJECT.firebaseapp.com',
-  projectId: 'PASTE_PROJECT_ID',
-  storageBucket: 'PASTE_PROJECT.appspot.com',
-  messagingSenderId: 'PASTE_SENDER_ID',
-  appId: 'PASTE_APP_ID',
+  apiKey: 'AIzaSyA-NnfxYsY0-Q5sG-Xs-cDwU9U1G5uHNO8',
+  authDomain: 'ayyubs-day.firebaseapp.com',
+  projectId: 'ayyubs-day',
+  storageBucket: 'ayyubs-day.firebasestorage.app',
+  messagingSenderId: '1013827720029',
+  appId: '1:1013827720029:web:d51dbca098c79daaa6ceb4',
 };
 
 export const WHY_DEFAULT =
