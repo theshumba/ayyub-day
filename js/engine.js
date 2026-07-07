@@ -76,7 +76,7 @@ export function generateDay({ date, prayers, config, trip = false }) {
 
   if (trip) {
     const summary = 'Away on a collection trip';
-    blocks.push({ start: clamp(ws), end: null, kind: 'trip', label: 'On the road — sourcing & collections', tags: [], note: 'Grab extra content while out 🎥' });
+    blocks.push({ start: clamp(ws), end: null, kind: 'trip', label: 'On the road — sourcing & collections', tags: [], note: 'Grab extra content while out' });
     blocks.push({ start: clamp(addMin(ws, 180)), end: null, kind: 'trip', label: 'Meet sellers · collect · photograph', tags: [] });
     blocks.push({ start: clamp(addMin(ws, 360)), end: null, kind: 'note', label: 'Check local prayer times where you are', tags: [] });
     return finalize(blocks, info.type, summary);
@@ -89,7 +89,7 @@ export function generateDay({ date, prayers, config, trip = false }) {
     const shiftEnd = `${pad(endH)}:00`;
     summary = `Barbering at Menspire ${shiftStart}–${shiftEnd}`;
     blocks.push({ start: addMin(shiftStart, -config.commuteMin), end: shiftStart, kind: 'commute', label: 'Drive to Beaconsfield', tags: [] });
-    blocks.push({ start: shiftStart, end: shiftEnd, kind: 'shift', label: 'Menspire — barbering', tags: ['film-barber'], note: '🎥 Film 1 barber video at the chair' });
+    blocks.push({ start: shiftStart, end: shiftEnd, kind: 'shift', label: 'Menspire — barbering', tags: ['film-barber'], note: 'Film 1 barber video at the chair' });
     for (const b of blocks) {
       if (b.prayer && within(b.start, shiftStart, shiftEnd)) b.note = 'Pray on your break at the chair';
     }

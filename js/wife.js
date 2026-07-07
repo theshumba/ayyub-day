@@ -1,11 +1,12 @@
 // Wife view — read-only, calm, "heart at ease". Only ever reads shared/current.
 import { state, initAuth, loadWife, signIn, signUp, myUid } from './store.js';
 import { $, el, clear, niceTime } from './util.js';
+import { icon, svg, sectionTitle } from './ui-kit.js';
 
-function statusLine(s) {
-  if (s.status === 'away') return `🚐 Away collecting — back by ${s.awayBackBy || 'later'}`;
-  if (s.status === 'working') return '✂️ At work right now';
-  return '🏠 At home';
+function statusBits(s) {
+  if (s.status === 'away') return { ic: 'van', line: `Away collecting — back by ${s.awayBackBy || 'later'}` };
+  if (s.status === 'working') return { ic: 'scissors', line: 'At work right now' };
+  return { ic: 'heart', line: 'At home' };
 }
 
 function render(shared) {
@@ -13,39 +14,38 @@ function render(shared) {
   clear(root);
   if (!shared) {
     root.append(el('div.card', {}, [
-      el('h2', {}, 'Nothing yet today'),
-      el('p.hint', {}, 'Once Ayyub opens his planner today, his schedule will appear here.'),
+      sectionTitle('moon', 'Nothing yet today'),
+      el('p.hint', {}, 'Once Ayyub opens his planner today, his schedule appears here.'),
     ]));
     return;
   }
   const s = shared;
-  root.append(el('div.card', {}, [
-    el('div.why', {}, '“Be present for my wife.”'),
-    el('h2', {}, statusLine(s)),
-    el('p.summary', {}, s.todaySummary || ''),
+  const b = statusBits(s);
+  root.append(el('div.status-hero', {}, [
+    el('div.sh-ic', { html: svg(b.ic, 26) }),
+    el('h2', {}, b.line),
+    el('p', {}, s.todaySummary || ''),
   ]));
 
   root.append(el('div.card', {}, [
-    el('h3', {}, '❤️ Time together today'),
-    el('p', {}, s.wifeTimeBlock ? `Set aside: ${s.wifeTimeBlock}` : 'Being arranged around today.'),
-    el('h3', {}, '🍽️ This week’s date night'),
-    el('p', {}, s.dateNight?.done ? `Booked ✓ ${s.dateNight.note ? '· ' + s.dateNight.note : ''}` : 'Not yet this week.'),
+    sectionTitle('heart', 'Time together'),
+    el('div.li-row', {}, [el('span.grow', {}, 'Today, just the two of you'), el('span.n-time tnum', {}, s.wifeTimeBlock || 'soon')]),
+    el('div.li-row', {}, [el('span.grow', {}, 'This week’s date night'), el('span.n-time', {}, s.dateNight?.done ? `Booked${s.dateNight.note ? ' · ' + s.dateNight.note : ''}` : 'Not yet')]),
   ]));
 
   if (s.prayerTimes) {
     const P = s.prayerTimes;
     root.append(el('div.card', {}, [
-      el('h3', {}, '🕌 Today’s prayers'),
+      sectionTitle('dome', 'Today’s prayers', 'gold'),
       el('div.trend', {}, [['Fajr', P.fajr], ['Dhuhr', P.dhuhr], ['Asr', P.asr], ['Maghrib', P.maghrib], ['Isha', P.isha]]
-        .map(([n, t]) => el('span.trend-item', {}, [el('b', {}, n), ' ', niceTime(t)]))),
+        .map(([n, t]) => el('span.trend-item', {}, [el('b tnum', {}, niceTime(t)), el('div', {}, n)]))),
     ]));
   }
 
   if (s.dayAtAGlance?.length) {
     root.append(el('div.card', {}, [
-      el('h3', {}, 'His day at a glance'),
-      el('div.timeline', {}, s.dayAtAGlance.map((b) =>
-        el('div.block', {}, [el('div.block-time', {}, [el('span.t1', {}, b.time)]), el('div.block-body', {}, [el('div.block-title', {}, b.label)]), el('span.tick-spacer')]))),
+      sectionTitle('sun', 'His day at a glance'),
+      ...s.dayAtAGlance.map((x) => el('div.li-row', {}, [el('span.grow', {}, x.label), el('span.n-time tnum', {}, x.time)])),
     ]));
   }
 }
@@ -53,9 +53,9 @@ function render(shared) {
 function notLinked() {
   clear($('#wife-root'));
   $('#wife-root').append(el('div.card', {}, [
-    el('h2', {}, 'Almost there'),
+    sectionTitle('heart', 'Almost there'),
     el('p', {}, 'Ask Ayyub to link you. Show him this ID:'),
-    el('p', {}, el('code', {}, myUid() || '—')),
+    el('p', { style: 'margin:8px 0' }, el('code', {}, myUid() || '—')),
     el('p.hint', {}, 'He pastes it into Settings → Link your wife. Then his day appears here automatically.'),
   ]));
 }

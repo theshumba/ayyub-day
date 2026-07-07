@@ -30,7 +30,8 @@ function makeNode(tag) {
 const store = {};
 const memStore = (bag) => ({ getItem: (k) => (k in bag ? bag[k] : null), setItem: (k, v) => { bag[k] = String(v); }, removeItem: (k) => { delete bag[k]; } });
 
-globalThis.document = { createElement: makeNode, createTextNode: makeText, querySelector: () => null };
+globalThis.__SMOKE__ = true;
+globalThis.document = { createElement: makeNode, createTextNode: makeText, querySelector: () => null, getElementById: () => null };
 globalThis.window = { addEventListener() {} };
 globalThis.location = { search: '' };
 globalThis.localStorage = memStore(store);
