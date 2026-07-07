@@ -1,0 +1,11 @@
+{
+  "name": "ayyub-life-planner",
+  "version": "1.0.0",
+  "description": "Prayer-anchored personal operating system for Ayyub",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node --test",
+    "serve": "npx --yes serve -l 5173 ."
+  }
+}
