@@ -1,10 +1,10 @@
 // Offline shell for the owner app + wife view. Firebase/Aladhan stay network-first.
-const CACHE = 'ayyub-v3';
+const CACHE = 'ayyub-v4';
 const CORE = [
   './', './index.html', './wife.html', './css/styles.css', './manifest.webmanifest',
   './js/app.js', './js/wife.js', './js/store.js', './js/engine.js', './js/prayer.js',
-  './js/util.js', './js/config.js', './js/ui-kit.js', './js/ui-today.js', './js/ui-week.js',
-  './js/ui-life.js', './js/ui-private.js', './js/pin.js', './icon-192.png', './icon-512.png',
+  './js/util.js', './js/config.js', './js/ui-kit.js', './js/i18n.js', './js/ui-today.js',
+  './js/ui-week.js', './js/ui-life.js', './js/ui-private.js', './js/pin.js', './icon-192.png', './icon-512.png',
 ];
 
 self.addEventListener('install', (e) => {

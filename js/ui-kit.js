@@ -30,6 +30,7 @@ const P = {
   film: '<rect x="3.2" y="5" width="17.6" height="14" rx="2.2"/><path d="M8 5v14M16 5v14M3.2 9.5h4.8M16 9.5h4.8M3.2 14.5h4.8M16 14.5h4.8"/>',
   check: '<path d="M5 12.5l4.5 4.5L19 7"/>',
   route: '<circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="6" r="2.2"/><path d="M8 17h6a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6"/>',
+  globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.6 2.4 4 5.5 4 9s-1.4 6.6-4 9c-2.6-2.4-4-5.5-4-9s1.4-6.6 4-9z"/>',
 };
 
 export const svg = (name, size = 22) =>

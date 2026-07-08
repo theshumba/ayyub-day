@@ -148,14 +148,18 @@ const svgSpan = (n) => el('span.ic', { html: svg(n, 18) });
 function publishShared(plan, prayers, trip, now, nowBlock) {
   const inShift = !!nowBlock && (nowBlock.kind === 'shift' || nowBlock.kind === 'jumuah');
   const wifeBlock = plan.blocks.find((b) => b.kind === 'wife');
+  const shiftBlock = plan.blocks.find((b) => b.kind === 'shift');
+  // Semantic (language-agnostic) payload so the wife view can render in Urdu or English.
   writeShared({
     status: trip ? 'away' : (inShift ? 'working' : 'home'),
     awayBackBy: trip ? trip.back : '',
-    todaySummary: plan.summary,
-    wifeTimeBlock: wifeBlock ? `${niceTime(wifeBlock.start)}–${niceTime(wifeBlock.end)}` : '',
+    dayType: trip ? 'trip' : plan.dayType,
+    shift: shiftBlock ? { startHm: shiftBlock.start, endHm: shiftBlock.end } : null,
+    wifeTime: wifeBlock ? { startHm: wifeBlock.start, endHm: wifeBlock.end } : null,
     dateNight: { done: state.priv.week.dateNight, note: state.priv.week.dateNote },
     prayerTimes: prayers,
-    dayAtAGlance: plan.blocks.filter((b) => ['prayer', 'shift', 'jumuah', 'wife', 'trip'].includes(b.kind)).map((b) => ({ time: niceTime(b.start), label: b.label })),
+    glance: plan.blocks.filter((b) => ['prayer', 'shift', 'jumuah', 'wife', 'trip'].includes(b.kind))
+      .map((b) => ({ kind: b.kind, startHm: b.start, name: b.label })),
   });
 }
 

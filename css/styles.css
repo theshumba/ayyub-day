@@ -343,3 +343,28 @@ h4.mini-h { font-size: 11.5px; text-transform: uppercase; letter-spacing: .1em; 
 @media (prefers-reduced-motion: reduce) {
   *, .tab-root.enter, .check.on .ic, .pulse-dot, .node.now .dot { animation: none !important; transition: none !important; }
 }
+
+/* ---------- Language toggle ---------- */
+.lang-btn {
+  display: inline-flex; align-items: center; gap: 5px; background: var(--surface);
+  border: 1px solid var(--line); color: var(--ink); padding: 6px 11px; border-radius: 11px;
+  font-size: 13px; font-weight: 600; box-shadow: var(--sh);
+}
+.lang-btn:active, .lang-link:active { transform: scale(.95); }
+.lang-btn .ic, .lang-link .ic { display: inline-grid; place-items: center; }
+.lang-link {
+  margin-top: 16px; background: none; border: none; color: var(--sage); font-size: 13px;
+  display: inline-flex; align-items: center; gap: 6px; justify-content: center; width: 100%;
+}
+
+/* ---------- Urdu / RTL (wife view) ---------- */
+[dir="rtl"] .tab-root, [dir="rtl"] .login-card {
+  font-family: "Noto Nastaliq Urdu", "Jameel Noori Nastaleeq", "Urdu Typesetting", var(--sans);
+}
+[dir="rtl"] .sec-title, [dir="rtl"] .status-hero h2, [dir="rtl"] .brand, [dir="rtl"] .topbar-title {
+  font-family: "Noto Nastaliq Urdu", "Jameel Noori Nastaleeq", var(--serif);
+}
+[dir="rtl"] .card, [dir="rtl"] .status-hero, [dir="rtl"] .login-card { line-height: 2; }
+[dir="rtl"] .li-row, [dir="rtl"] .hint, [dir="rtl"] .brand-sub { text-align: right; }
+[dir="rtl"] .status-hero, [dir="rtl"] .status-hero p, [dir="rtl"] .trend-item { text-align: center; }
+[dir="rtl"] .n-time, [dir="rtl"] .trend-item b, [dir="rtl"] code { direction: ltr; unicode-bidi: embed; }

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="ur" dir="rtl">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -11,19 +11,23 @@
 <body>
   <div id="login" class="view">
     <div class="login-card">
-      <div class="brand">☾ Ayyub’s Day</div>
-      <p class="brand-sub">A little window into his day.</p>
+      <div id="w-brand" class="brand">☾ Ayyub’s Day</div>
+      <p id="w-sub" class="brand-sub">A little window into his day.</p>
       <input id="login-email" class="field" type="email" placeholder="Email" autocomplete="username" />
       <input id="login-pw" class="field" type="password" placeholder="Password" autocomplete="current-password" />
       <p id="login-err" class="login-err"></p>
       <button id="btn-signin" class="btn">Sign in</button>
       <button id="btn-signup" class="btn ghost">Create account</button>
+      <button id="btn-lang-login" class="lang-link"></button>
     </div>
   </div>
 
   <div id="app" class="view hidden">
-    <header class="topbar"><span class="topbar-title">☾ His day, for you</span></header>
-    <div id="demo-banner" class="demo-banner hidden">Demo — showing the schedule saved on this device.</div>
+    <header class="topbar">
+      <span id="w-title" class="topbar-title">☾ His day, for you</span>
+      <button id="btn-lang" class="lang-btn"></button>
+    </header>
+    <div id="demo-banner" class="demo-banner hidden"></div>
     <main id="wife-root" class="tab-root"></main>
   </div>
 

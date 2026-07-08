@@ -21,7 +21,7 @@ function drawHealth(root) {
 
   root.append(el('div.card', {}, [
     sectionTitle('gauge', 'Weight'),
-    el('div.figure', {}, [el('b tnum', {}, `${current}`), el('span.goal', {}, `kg  ·  goal ${wt.goalKg}`)]),
+    el('div.figure', {}, [el('b.tnum', {}, `${current}`), el('span.goal', {}, `kg  ·  goal ${wt.goalKg}`)]),
     el('div.bar', {}, [el('div.bar-fill green', { style: `width:${pct}%` })]),
     el('p.pace', {}, paceMessage(wt, current, toGo)),
     el('div.row', {}, [input, logBtn]),
@@ -41,7 +41,7 @@ function paceMessage(wt, current, toGo) {
 
 function trendList(logs) {
   if (!logs.length) return el('p.hint', {}, 'Log your weight to see the trend.');
-  return el('div.trend', {}, logs.slice(-6).map((l) => el('span.trend-item', {}, [el('b tnum', {}, `${l.kg}`), ' ', el('small', {}, l.date.slice(5))])));
+  return el('div.trend', {}, logs.slice(-6).map((l) => el('span.trend-item', {}, [el('b.tnum', {}, `${l.kg}`), ' ', el('small', {}, l.date.slice(5))])));
 }
 
 function gymCard(root) {
@@ -96,7 +96,7 @@ function drawMoney(root) {
 
   root.append(el('div.card', {}, [
     sectionTitle('wallet', 'Savings', 'gold'),
-    el('div.figure', {}, [el('b tnum', {}, `£${s.balance.toFixed(2)}`), s.goalLabel ? el('span.goal', {}, s.goalLabel) : null]),
+    el('div.figure', {}, [el('b.tnum', {}, `£${s.balance.toFixed(2)}`), s.goalLabel ? el('span.goal', {}, s.goalLabel) : null]),
     s.goalAmount > 0 ? el('div.bar', {}, [el('div.bar-fill gold', { style: `width:${pct}%` })]) : null,
     s.goalAmount > 0 ? el('p.pct tnum', {}, `${pct}% toward £${s.goalAmount}`) : null,
     el('div.row', {}, [amt, addBtn]),

@@ -6,6 +6,7 @@ import assert from 'node:assert/strict';
 // ---- minimal fake DOM ----
 function makeText(t) { return { nodeType: 3, textContent: t }; }
 function makeNode(tag) {
+  if (/\s/.test(tag)) throw new Error(`invalid tag name "${tag}" (spaces not allowed — did you mean a class?)`);
   const n = {
     tagName: tag, nodeType: 1, children: [], attrs: {}, _cls: new Set(),
     setAttribute(k, v) { this.attrs[k] = v; }, getAttribute(k) { return this.attrs[k]; },
@@ -63,7 +64,8 @@ await check('Life', (r) => renderLife(r), R());
 await check('Health', (r) => renderHealth(r), R());
 await check('Money', (r) => renderMoney(r), R());
 
-// shared status was published for the wife view
-assert.ok(JSON.parse(localStorage.getItem('ayyub:shared')).todaySummary, 'wife shared status written');
-console.log('  ✓ wife shared status published');
+// shared status was published for the wife view (semantic payload)
+const shared = JSON.parse(localStorage.getItem('ayyub:shared'));
+assert.ok(shared.status && shared.dayType && Array.isArray(shared.glance) && shared.glance.length, 'wife shared status written');
+console.log('  ✓ wife shared status published (status + dayType + glance)');
 console.log('\nSmoke test passed ✓');
