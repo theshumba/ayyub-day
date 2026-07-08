@@ -1,5 +1,5 @@
-// Owner app: auth guard, tab router, settings.
-import { state, initAuth, loadOwner, signIn, signUp, signOutUser, myUid, linkWife, save } from './store.js';
+// Owner app — no login. Opens straight to the day. Tab router + settings.
+import { state, initOwner, save, shareLink, exportData, importData } from './store.js';
 import { renderToday } from './ui-today.js';
 import { renderWeek } from './ui-week.js';
 import { renderLife } from './ui-life.js';
@@ -34,24 +34,35 @@ function buildTabbar() {
   }
 }
 
-function showLogin(errMsg) {
-  $('#login').classList.remove('hidden');
-  $('#app').classList.add('hidden');
-  if (errMsg) $('#login-err').textContent = errMsg;
-}
-
 function showApp() {
-  $('#login').classList.add('hidden');
   $('#app').classList.remove('hidden');
-  $('#demo-banner').classList.toggle('hidden', !state.demo);
+  $('#sync-note').classList.toggle('hidden', state.cloud);
   buildTabbar();
   const wanted = new URLSearchParams(location.search).get('tab');
   showTab(TABS.some((t) => t[0] === wanted) ? wanted : 'today');
 }
 
-function wireLogin() {
-  $('#btn-signin').onclick = async () => { try { await signIn($('#login-email').value, $('#login-pw').value); } catch (e) { showLogin(e.message); } };
-  $('#btn-signup').onclick = async () => { try { await signUp($('#login-email').value, $('#login-pw').value); } catch (e) { showLogin(e.message); } };
+async function shareWithWife() {
+  const link = shareLink();
+  if (navigator.share) { try { await navigator.share({ title: 'Ayyub’s Day', text: 'My day, for you.', url: link }); return; } catch (_e) { /* cancelled */ } }
+  try { await navigator.clipboard.writeText(link); alert('Link copied — send it to your wife once.'); }
+  catch (_e) { prompt('Copy this link and send it to your wife:', link); }
+}
+
+function backup() {
+  const blob = new Blob([exportData()], { type: 'application/json' });
+  const a = el('a', { href: URL.createObjectURL(blob), download: 'ayyub-day-backup.json' });
+  a.click(); URL.revokeObjectURL(a.href);
+}
+function restore() {
+  const inp = el('input', { type: 'file', accept: 'application/json' });
+  inp.addEventListener('change', () => {
+    const f = inp.files[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = () => { try { importData(r.result); alert('Restored ✓'); location.reload(); } catch (_e) { alert('Could not read that backup file.'); } };
+    r.readAsText(f);
+  });
+  inp.click();
 }
 
 function openSettings() {
@@ -62,9 +73,15 @@ function openSettings() {
   const body = el('div', {}, [
     el('h3', { style: 'font-family:var(--serif);font-size:22px' }, 'Settings'),
     el('label', {}, 'Your “why” (shown on Today)'), why,
-    state.demo ? el('p.hint', {}, 'Demo mode — add Firebase in js/config.js to enable real login and the wife view. See the README.') : linkBlock(),
-    installPrompt ? el('button.btn', { onclick: () => { installPrompt.prompt(); installPrompt = null; } }, 'Install app') : null,
-    state.demo ? null : el('button.btn.ghost', { onclick: async () => { await signOutUser(); location.reload(); } }, 'Sign out'),
+    el('label', {}, 'Wife’s view'),
+    el('button.btn', { onclick: shareWithWife }, 'Share my day with my wife'),
+    el('p.hint', {}, 'Send her the link once. Her view updates automatically after that — no login for either of you.'),
+    el('label', {}, 'Your data (kept only on this phone)'),
+    el('div.row', {}, [
+      el('button.btn.ghost', { onclick: backup, style: 'flex:1' }, 'Back up'),
+      el('button.btn.ghost', { onclick: restore, style: 'flex:1' }, 'Restore'),
+    ]),
+    installPrompt ? el('button.btn.ghost', { onclick: () => { installPrompt.prompt(); installPrompt = null; } }, 'Install app') : null,
     el('button.btn.ghost', { onclick: () => m.classList.add('hidden') }, 'Close'),
   ]);
   clear(m); m.append(el('div.modal-card', {}, body));
@@ -72,26 +89,13 @@ function openSettings() {
   m.onclick = (e) => { if (e.target === m) m.classList.add('hidden'); };
 }
 
-function linkBlock() {
-  const wifeInput = el('input.input', { placeholder: "paste wife's ID" });
-  return el('div', {}, [
-    el('p.hint', {}, ['Your ID: ', el('code', {}, myUid() || '—')]),
-    el('label', {}, 'Link your wife (paste the ID from her screen)'),
-    el('div.row', {}, [wifeInput, el('button.btn.mini', { onclick: async () => { if (wifeInput.value.trim()) { await linkWife(wifeInput.value.trim()); alert('Linked ✓'); } } }, 'Link')]),
-  ]);
-}
-
 async function boot() {
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => {});
   window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); installPrompt = e; });
   $('#btn-settings').innerHTML = svg('gear', 22);
   $('#btn-settings').onclick = openSettings;
-  wireLogin();
-  await initAuth(async (user) => {
-    if (!user) { showLogin(); return; }
-    await loadOwner(activeDate());
-    showApp();
-  });
+  await initOwner(activeDate());
+  showApp();
 }
 
 boot();

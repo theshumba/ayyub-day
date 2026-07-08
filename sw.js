@@ -1,5 +1,5 @@
 // Offline shell for the owner app + wife view. Firebase/Aladhan stay network-first.
-const CACHE = 'ayyub-v4';
+const CACHE = 'ayyub-v5';
 const CORE = [
   './', './index.html', './wife.html', './css/styles.css', './manifest.webmanifest',
   './js/app.js', './js/wife.js', './js/store.js', './js/engine.js', './js/prayer.js',

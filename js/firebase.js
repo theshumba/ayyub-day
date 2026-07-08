@@ -1,40 +1,16 @@
-// Firebase wiring — only imported when real config has been pasted into config.js.
-// Loaded straight from the gstatic CDN so there is no build step.
+// Firebase wiring — Firestore only (no auth). Loaded from the gstatic CDN, no build step.
+// Used solely to sync the reassurance status doc between Ayyub's phone and his wife's.
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import {
-  getAuth, onAuthStateChanged, signInWithEmailAndPassword,
-  createUserWithEmailAndPassword, signOut,
-} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-import {
-  getFirestore, doc, getDoc, setDoc, onSnapshot,
-  collection, query, where, getDocs,
+  getFirestore, doc, setDoc, onSnapshot,
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 import { FIREBASE_CONFIG } from './config.js';
 
 const app = initializeApp(FIREBASE_CONFIG);
-const auth = getAuth(app);
 const db = getFirestore(app);
+const sharedRef = (hid) => doc(db, 'households', hid, 'shared', 'current');
 
 export const fb = {
-  auth,
-  onAuth: (cb) => onAuthStateChanged(auth, cb),
-  signIn: (email, pw) => signInWithEmailAndPassword(auth, email, pw),
-  signUp: (email, pw) => createUserWithEmailAndPassword(auth, email, pw),
-  signOut: () => signOut(auth),
-
-  // Household doc id = owner's uid.
-  ownerDoc: (hid) => doc(db, 'households', hid),
-  privateDoc: (hid) => doc(db, 'households', hid, 'private', 'owner'),
-  sharedDoc: (hid) => doc(db, 'households', hid, 'shared', 'current'),
-
-  getDoc: (ref) => getDoc(ref),
-  setDoc: (ref, data) => setDoc(ref, data, { merge: true }),
-  watch: (ref, cb) => onSnapshot(ref, (snap) => cb(snap.exists() ? snap.data() : null)),
-
-  // Find the household where the current user is the wife.
-  findWifeHousehold: async (uid) => {
-    const q = query(collection(db, 'households'), where('wifeUid', '==', uid));
-    const snap = await getDocs(q);
-    return snap.empty ? null : { id: snap.docs[0].id, ...snap.docs[0].data() };
-  },
+  setShared: (hid, data) => setDoc(sharedRef(hid), data, { merge: true }),
+  watchShared: (hid, cb) => onSnapshot(sharedRef(hid), (snap) => cb(snap.exists() ? snap.data() : null)),
 };

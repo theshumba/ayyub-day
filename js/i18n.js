@@ -1,14 +1,8 @@
 // Tiny i18n layer for the wife view. All Urdu here in one place so it's easy to
 // proofread/edit. Urdu (اردو) is right-to-left — setDir() mirrors the whole view.
 const DICT = {
-  brand:            { en: '☾ Ayyub’s Day',        ur: '☾ ایوب کا دن' },
   topbar_title:     { en: 'His day, for you',      ur: 'اُن کا دن، آپ کے لیے' },
-  login_sub:        { en: 'A little window into his day.', ur: 'اُن کے دن میں ایک جھروکا۔' },
-  login_email:      { en: 'Email',                 ur: 'ای میل' },
-  login_password:   { en: 'Password',              ur: 'پاس ورڈ' },
-  signin:           { en: 'Sign in',               ur: 'سائن اِن' },
-  create:           { en: 'Create account',        ur: 'اکاؤنٹ بنائیں' },
-  demo_banner:      { en: 'Demo — showing the schedule saved on this device.', ur: 'ڈیمو — اِس ڈیوائس پر محفوظ شیڈول دکھایا جا رہا ہے۔' },
+  demo_banner:      { en: 'Sync is off on this device.', ur: 'اِس ڈیوائس پر سِنک بند ہے۔' },
 
   status_working:   { en: 'At work right now',      ur: 'اِس وقت کام پر ہیں' },
   status_home:      { en: 'At home',                ur: 'گھر پر ہیں' },
@@ -31,9 +25,10 @@ const DICT = {
 
   empty_title:      { en: 'Nothing yet today',      ur: 'آج ابھی کچھ نہیں' },
   empty_body:       { en: 'Once Ayyub opens his planner today, his schedule appears here.', ur: 'جب ایوب آج اپنا پلانر کھولیں گے تو اُن کا شیڈول یہاں خودبخود آ جائے گا۔' },
-  link_title:       { en: 'Almost there',           ur: 'بس تھوڑا سا باقی' },
-  link_body:        { en: 'Ask Ayyub to link you. Show him this ID:', ur: 'ایوب سے کہیں کہ آپ کو لنک کریں۔ اُنہیں یہ آئی ڈی دکھائیں:' },
-  link_hint:        { en: 'He pastes it into Settings → Link your wife. Then his day appears here automatically.', ur: 'وہ اسے سیٹنگز → اپنی اہلیہ کو لنک کریں، میں پیسٹ کریں گے۔ پھر اُن کا دن یہاں خودبخود نظر آئے گا۔' },
+  pair_title:       { en: 'Connect to Ayyub',        ur: 'ایوب سے جُڑیں' },
+  pair_body:        { en: 'Open the link Ayyub sends you — that’s all. Or paste it here.', ur: 'ایوب کی بھیجی ہوئی لنک کھولیں — بس اتنا ہی۔ یا یہاں پیسٹ کریں۔' },
+  pair_placeholder: { en: 'Paste the link',          ur: 'لنک یہاں پیسٹ کریں' },
+  pair_button:      { en: 'Connect',                 ur: 'جُڑیں' },
 
   // day-at-a-glance kinds
   k_shift:          { en: 'Menspire — barbering',   ur: 'مِنسپائر — بال کاٹنا' },

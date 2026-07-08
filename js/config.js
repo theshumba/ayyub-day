@@ -23,7 +23,8 @@ export const CONFIG = {
 };
 
 // Firebase web-app config for project "ayyubs-day". Safe to keep public —
-// access is controlled by firestore.rules + login, not by hiding these keys.
+// used only to sync the wife's reassurance doc; access is controlled by
+// firestore.rules (no login), not by hiding these keys.
 export const FIREBASE_CONFIG = {
   apiKey: 'AIzaSyA-NnfxYsY0-Q5sG-Xs-cDwU9U1G5uHNO8',
   authDomain: 'ayyubs-day.firebaseapp.com',

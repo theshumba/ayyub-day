@@ -1,15 +1,13 @@
-// Wife view — read-only, calm, "heart at ease". Urdu (default) or English, RTL-aware.
-// Only ever reads shared/current.
-import { state, initAuth, loadWife, signIn, signUp, myUid } from './store.js';
+// Wife view — no login. Pairs once via Ayyub's share link, then reads his status.
+// Urdu (default) or English, RTL-aware. Never sees his private data (it's not in the cloud).
+import { state, initWife, pairWife } from './store.js';
 import { $, el, clear, niceTime } from './util.js';
 import { svg, sectionTitle } from './ui-kit.js';
 import { t, prayerName, toggleLang, otherLangLabel, applyDir, setLang } from './i18n.js';
 
 let lastShared = null;
-let linked = true;
+let paired = true;
 
-// A sample day for ?preview — lets Ayyub see exactly what his wife will see,
-// with no login. Fake data only; nothing real is ever exposed.
 const SAMPLE = {
   status: 'working', awayBackBy: '', dayType: 'barber',
   shift: { startHm: '10:00', endHm: '18:00' }, wifeTime: { startHm: '21:15', endHm: '22:45' },
@@ -40,7 +38,7 @@ function glanceLabel(g) {
 }
 
 function render(shared) {
-  lastShared = shared;
+  lastShared = shared; paired = true;
   const root = $('#wife-root');
   clear(root);
   if (!shared) {
@@ -54,13 +52,11 @@ function render(shared) {
     el('h2', {}, b.line),
     el('p', {}, summaryText(s)),
   ]));
-
   root.append(el('div.card', {}, [
     sectionTitle('heart', t('sec_together')),
     el('div.li-row', {}, [el('span.grow', {}, t('together_today')), el('span.n-time tnum', {}, s.wifeTime ? `${niceTime(s.wifeTime.startHm)}–${niceTime(s.wifeTime.endHm)}` : t('together_soon'))]),
     el('div.li-row', {}, [el('span.grow', {}, t('datenight_label')), el('span.n-time', {}, s.dateNight?.done ? (t('datenight_booked') + (s.dateNight.note ? ` · ${s.dateNight.note}` : '')) : t('datenight_no'))]),
   ]));
-
   if (s.prayerTimes) {
     const P = s.prayerTimes;
     root.append(el('div.card', {}, [
@@ -69,7 +65,6 @@ function render(shared) {
         el('span.trend-item', {}, [el('b.tnum', {}, niceTime(P[k.toLowerCase()])), el('div', {}, prayerName(k))]))),
     ]));
   }
-
   if (s.glance?.length) {
     root.append(el('div.card', {}, [
       sectionTitle('sun', t('sec_glance')),
@@ -78,41 +73,25 @@ function render(shared) {
   }
 }
 
-function notLinked() {
-  linked = false;
+function renderPair() {
+  paired = false;
+  const input = el('input.input', { placeholder: t('pair_placeholder') });
   clear($('#wife-root'));
   $('#wife-root').append(el('div.card', {}, [
-    sectionTitle('heart', t('link_title')),
-    el('p', {}, t('link_body')),
-    el('p', { style: 'margin:8px 0' }, el('code', {}, myUid() || '—')),
-    el('p.hint', {}, t('link_hint')),
+    sectionTitle('heart', t('pair_title')),
+    el('p', {}, t('pair_body')),
+    el('div.row', {}, [input, el('button.btn.mini', { onclick: () => pairWife(input.value) }, t('pair_button'))]),
   ]));
 }
 
 function applyStatic() {
-  $('#w-brand').textContent = t('brand');
-  $('#w-sub').textContent = t('login_sub');
-  $('#login-email').placeholder = t('login_email');
-  $('#login-pw').placeholder = t('login_password');
-  $('#btn-signin').textContent = t('signin');
-  $('#btn-signup').textContent = t('create');
   $('#w-title').textContent = t('topbar_title');
-  $('#demo-banner').textContent = t('demo_banner');
-  const label = `${svg('globe', 16)}<span>${otherLangLabel()}</span>`;
-  $('#btn-lang').innerHTML = label;
-  $('#btn-lang-login').innerHTML = label;
+  $('#sync-note').textContent = t('demo_banner');
+  $('#btn-lang').innerHTML = `${svg('globe', 16)}<span>${otherLangLabel()}</span>`;
 }
 
-function rerender() {
-  if ($('#app').classList.contains('hidden')) return;
-  linked ? render(lastShared) : notLinked();
-}
+function rerender() { paired ? render(lastShared) : renderPair(); }
 function onToggle() { toggleLang(); applyStatic(); rerender(); }
-
-function wireLogin() {
-  $('#btn-signin').onclick = async () => { try { await signIn($('#login-email').value, $('#login-pw').value); } catch (e) { $('#login-err').textContent = e.message; } };
-  $('#btn-signup').onclick = async () => { try { await signUp($('#login-email').value, $('#login-pw').value); } catch (e) { $('#login-err').textContent = e.message; } };
-}
 
 async function boot() {
   const q = new URLSearchParams(location.search);
@@ -120,22 +99,12 @@ async function boot() {
   applyDir();
   applyStatic();
   $('#btn-lang').onclick = onToggle;
-  $('#btn-lang-login').onclick = onToggle;
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => {});
-  if (q.has('preview')) {
-    $('#login').classList.add('hidden'); $('#app').classList.remove('hidden');
-    render(SAMPLE);
-    return;
-  }
-  wireLogin();
-  await initAuth(async (user) => {
-    if (!user) { $('#login').classList.remove('hidden'); $('#app').classList.add('hidden'); return; }
-    $('#login').classList.add('hidden'); $('#app').classList.remove('hidden');
-    $('#demo-banner').classList.toggle('hidden', !state.demo);
-    const { linked: isLinked } = await loadWife(render);
-    linked = isLinked;
-    if (!isLinked) notLinked();
-  });
+  $('#sync-note').classList.toggle('hidden', state.cloud);
+
+  if (q.has('preview')) { render(SAMPLE); return; }
+  const { paired: isPaired } = await initWife(render);
+  if (!isPaired) renderPair();
 }
 
 boot();

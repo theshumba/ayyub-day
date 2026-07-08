@@ -43,11 +43,11 @@ globalThis.fetch = async () => ({
   json: async () => ({ data: { timings: { Fajr: '03:10', Sunrise: '04:50', Dhuhr: '13:05', Asr: '17:20', Sunset: '21:13', Maghrib: '21:15', Isha: '22:40' } } }),
 });
 
-// ---- boot demo store ----
+// ---- boot store (no auth) ----
 const s = await import('../js/store.js');
-await new Promise((res) => s.initAuth((u) => { assert.ok(u, 'demo user set'); res(); }));
-await s.loadOwner(new Date('2026-07-07T12:00:00')); // a Tuesday (barber day)
+await s.initOwner(new Date('2026-07-07T12:00:00')); // a Tuesday (barber day)
 assert.equal(s.state.ready, true, 'store ready');
+assert.ok(s.state.hid, 'household id generated');
 
 // ---- render every tab ----
 const { renderToday } = await import('../js/ui-today.js');
